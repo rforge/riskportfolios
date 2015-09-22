@@ -1,0 +1,9 @@
+Package: RiskPortfolios
+Version: 2.00.01
+Date: 2015-09-21
+Title: Computation of risk-based portfolios
+Author: David Ardia, Kris Boudt and Jean-Philippe Gagnon-Fleury 
+Maintainer: David Ardia <david.ardia@fsa.ulaval.ca>
+Depends: Rsolnp, quadprog, MASS, nloptr, Rdonlp2
+Description: Provides functions to estimate covariance matrices and compute risk-based portfolios 
+License: GPL (>=2)

@@ -1,0 +1,19 @@
+Changes in Version 2.00.01 (DA)
+  o Renaming of the package with emphasis of risk-based portfolios
+  o Added inverse volatility portfolio
+
+Changes in Version 1.02.02 (DA)
+  o DESCRIPTION file adapted to new standard
+
+Changes in Version 1.02.01 (DA)
+  o Major revision of the package
+
+Changes in Version 1.01.02 (DA)
+  o bug fixd thanks to Samo Pahor
+
+Changes in Version 1.01.01 (DA)
+  o package's name
+  o package's version
+
+Changes in Version 1-00.01 (DA)
+  o first release
