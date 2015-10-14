@@ -71,9 +71,9 @@ A \eqn{(N \times 1)}{(N x 1)} vector of optimal portfolio weights.
   Efficient indexation: An alternatice to cap-weightes indices.
   \emph{Journal of Investment Management} \bold{9}(4), pp.1--23.
   
-  Ardia, D., Boudt, K. (2013). 
+  Ardia, D., Boudt, K. (2015). 
   Implied expected returns and the choice of a mean-variance efficient portfolio proxy.
-  \url{http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2215042}.
+  \emph{Journal of Portfolio Management} \bold{41} (4), pp.68--81.
        
   Choueifaty, Y., Coignard, Y., (2008). 
   Toward maximum diversification. 

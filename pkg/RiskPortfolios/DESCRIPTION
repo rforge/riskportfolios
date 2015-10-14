@@ -1,6 +1,6 @@
 Package: RiskPortfolios
-Version: 2.00.01
-Date: 2015-09-21
+Version: 2.00.02
+Date: 2015-10-14
 Title: Computation of risk-based portfolios
 Author: David Ardia, Kris Boudt and Jean-Philippe Gagnon-Fleury 
 Maintainer: David Ardia <david.ardia@fsa.ulaval.ca>

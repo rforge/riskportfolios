@@ -67,7 +67,8 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
     stop ('control must be a list') 
   }
   if (length(control) == 0){
-    control = list(type = "mv", constraint = "none", gross.c = 1.6, LB = NULL, UB = NULL, gamma = 0.89)
+    control = list(type = "mv", constraint = "none", gross.c = 1.6, 
+                   LB = NULL, UB = NULL, w0 = NULL, gamma = 0.89)
   }
   nam = names(control)
   if (!("type" %in% nam) || is.null(control$type)){
@@ -84,6 +85,9 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   }
   if (!("UB" %in% nam) || is.null(control$UB)){
     control$UB = NULL
+  }
+  if (!("w0" %in% nam) || is.null(control$w0)){
+    control$w0 = NULL
   }
   if (!("gamma" %in% nam) || is.null(control$gamma)){
     control$gamma = c(0.8773, 2.7063, 3.7950)
@@ -123,9 +127,12 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
       return(opt)
     }
     
-    n = dim(Sigma)[1]
-    w = rep(1/n, n)  
-    w = nloptr::slsqp(x0 = w, fn = .meanvar, hin = .grossConstraint, heq = .eqConstraint, nl.info = FALSE, 
+    n  = dim(Sigma)[1]
+    w0 = ctr$w0
+    if (is.null(w0)) {
+      w0 = rep(1/n, n)  
+    }
+    w = nloptr::slsqp(x0 = w0, fn = .meanvar, hin = .grossConstraint, heq = .eqConstraint, nl.info = FALSE, 
               control = list(xtol_rel = 1e-18, check_derivatives = FALSE))$par
   }
   else{
@@ -164,9 +171,12 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
       return(v)
     }
     
-    n = dim(Sigma)[1]
-    w = rep(1/n, n)  
-    w = nloptr::slsqp(x0 = w, fn = .minvol, hin = .grossConstraint, heq = .eqConstraint, 
+    n  = dim(Sigma)[1]
+    w0 = ctr$w0
+    if (is.null(w0)) {
+      w0 = rep(1/n, n)  
+    } 
+    w = nloptr::slsqp(x0 = w0, fn = .minvol, hin = .grossConstraint, heq = .eqConstraint, 
               nl.info = FALSE, control = list(xtol_rel = 1e-18, check_derivatives = FALSE))$par
   }
   else{    
@@ -186,8 +196,11 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   #########################################################################################   
   ctr = .ctrPortfolio(control)
   
-  n = dim(Sigma)[2]
-  w = rep(1/n, n)  
+  n  = dim(Sigma)[2]
+  w0 = ctr$w0
+  if (is.null(w0)) {
+    w0 = rep(1/n, n)  
+  } 
   
   .pRC = function(w){
     Sigmaw = crossprod(Sigma, w)
@@ -197,15 +210,15 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   }
   
   if (ctr$constraint[1] == "none"){
-    w = nloptr::slsqp(x0 = w, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
+    w = nloptr::slsqp(x0 = w0, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE))$par  
   }
   else if(ctr$constraint[1] == "lo"){ 
-    w = nloptr::slsqp(x0 = w, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
+    w = nloptr::slsqp(x0 = w0, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par  
   }
   else if(ctr$constraint[1] == "gross"){    
-    w = nloptr::slsqp(x0 = w, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
+    w = nloptr::slsqp(x0 = w0, fn = .pRC, heq = .eqConstraint, lower = rep(0,n), 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par     
   }
   else{
@@ -225,8 +238,11 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   ######################################################################################### 
   ctr = .ctrPortfolio(control)
   
-  n = dim(Sigma)[2]
-  w = rep(1/n, n)
+  n  = dim(Sigma)[2]
+  w0 = ctr$w0
+  if (is.null(w0)) {
+    w0 = rep(1/n, n)  
+  } 
   
   .divRatio = function(w){
     sig      = sqrt(diag(Sigma))
@@ -235,15 +251,15 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
     return(divRatio)
   }
   if (ctr$constraint[1] == "none"){
-    w = nloptr::slsqp(x0 = w, fn = .divRatio, heq = .eqConstraint, 
+    w = nloptr::slsqp(x0 = w0, fn = .divRatio, heq = .eqConstraint, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par
   }
   else if(ctr$constraint[1] == "lo"){ 
-    w = nloptr::slsqp(x0 = w, fn = .divRatio, lower = rep(0,n), heq = .eqConstraint, 
+    w = nloptr::slsqp(x0 = w0, fn = .divRatio, lower = rep(0,n), heq = .eqConstraint, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par    
   }
   else if(ctr$constraint[1] == "gross"){
-    w = nloptr::slsqp(x0 = w, fn = .divRatio, hin = .grossConstraint, heq = .eqConstraint, 
+    w = nloptr::slsqp(x0 = w0, fn = .divRatio, hin = .grossConstraint, heq = .eqConstraint, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par
   }
   else{
@@ -298,8 +314,11 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   LB = (1 / (2 * n)) * rep(1, n)
   UB = (2 / n) * rep(1, n)
   
-  w = (UB - LB)
-  w = w / sum(w)
+  w0 = ctr$w0
+  if (is.null(w0)) {
+    w0 = (UB - LB)
+    w0 = w0 / sum(w)  
+  } 
   
   .distRiskEff = function(w){
     Sigmaw = crossprod(Sigma, w)
@@ -312,15 +331,15 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   }
   
   if (ctr$constraint[1] == "none"){
-    w = nloptr::slsqp(x0 = w, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
+    w = nloptr::slsqp(x0 = w0, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par
   }
   else if(ctr$constraint[1] == "lo"){ 
-    w = nloptr::slsqp(x0 = w, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
+    w = nloptr::slsqp(x0 = w0, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par    
   }
   else if(ctr$constraint[1] == "gross"){
-    w = nloptr::slsqp(x0 = w, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
+    w = nloptr::slsqp(x0 = w0, fn = .distRiskEff, heq = .eqConstraint, lower = LB, upper = UB, 
                       nl.info = FALSE, control = list(xtol_rel = 1e-8, check_derivatives = FALSE, maxeval = 2000))$par
   }
   else{
@@ -336,6 +355,7 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   return(sum(w) - 1)
 }
 
+# DA here 1.6 is hard-coded, this should be changed
 .grossConstraint = function(w){
   return(1.6 - norm(as.matrix(w), type = "1") )
 }
