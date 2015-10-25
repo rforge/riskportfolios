@@ -199,7 +199,9 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   n  = dim(Sigma)[2]
   w0 = ctr$w0
   if (is.null(w0)) {
-    w0 = rep(1/n, n)  
+    #w0 = rep(1/n, n)  
+    w0 = 1 / sqrt(diag(Sigma))
+    w0 = w0 / sum(w0)
   } 
   
   .pRC = function(w){
