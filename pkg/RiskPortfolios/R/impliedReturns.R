@@ -92,7 +92,7 @@ impliedReturns = function(rets = NULL, mu = NULL, Sigma = NULL, semiDev = NULL, 
 .robregImpliedReturns = function(mu, Sigma, w){
   
   # DA robust regression here
-  imu = as.vector(rlm(mu ~ (Sigma * w))$fitted) 
+  imu = as.vector(MASS::rlm(mu ~ (Sigma * w))$fitted) 
   return(imu)
 }
 

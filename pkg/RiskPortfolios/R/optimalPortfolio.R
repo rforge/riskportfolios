@@ -319,7 +319,7 @@ optimalPortfolio = function(Sigma, mu = NULL, semiDev = NULL, control = list()){
   w0 = ctr$w0
   if (is.null(w0)) {
     w0 = (UB - LB)
-    w0 = w0 / sum(w)  
+    w0 = w0 / sum(w0)  
   } 
   
   .distRiskEff = function(w){

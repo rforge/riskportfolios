@@ -11,7 +11,7 @@ citEntry(entry = "manual",
                              person("Jean-Philippe","Gagnon-Fleury")),
      year = year,
 	 note = vers,
-	 url = "http://CRAN.R-project.org/package=RiskPortfolios",
+	 url = "https://r-forge.r-project.org/projects/riskportfolios/",
 	 textVersion =
          paste("David Ardia, Kris Boudt and Jean-Philippe Gagnon-Fleury (", year,"). ",
                "'RiskPortfolios': Computation of risk-based portfolios in 'R'. ", vers, ".", sep = "")

@@ -1,3 +1,7 @@
+Changes in Version 2.00.04 (DA)
+  o serveral error fixes
+  o new Imports instead of Depends
+
 Changes in Version 2.00.03 (DA)
   o erc initialized at 1/sigma normlized
 
